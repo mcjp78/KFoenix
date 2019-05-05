@@ -8,6 +8,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.openjfx.javafxplugin") version "0.0.7"
+    id("maven")
 }
 
 group = "kfoenix"
