@@ -1,13 +1,13 @@
-import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.load.kotlin.signatures
+import org.openjfx.gradle.JavaFXOptions
 
 plugins {
     kotlin("jvm") version "1.3.11"
     id("org.jetbrains.dokka") version "0.9.17"
     id("maven-publish")
     id("signing")
+    id("org.openjfx.javafxplugin") version "0.0.7"
 }
 
 group = "kfoenix"
@@ -15,12 +15,14 @@ version = "0.1.4"
 
 repositories {
     mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
+
 
 dependencies {
     compile(kotlin("stdlib-jdk8"))
-    compile("com.jfoenix:jfoenix:8.0.8")
-    compile("no.tornado:tornadofx:1.7.17") {
+    compile("com.jfoenix:jfoenix:9.0.8")
+    compile("no.tornado:tornadofx:2.0.0-SNAPSHOT") {
         exclude("org.jetbrains.kotlin")
     }
 }
@@ -45,6 +47,10 @@ val sourcesJar by tasks.creating(Jar::class) {
 val javaDocJar by tasks.creating(Jar::class) {
     classifier = "javadoc"
     from("$buildDir/javadoc")
+}
+configure<JavaFXOptions>
+{
+   modules("javafx.controls", "javafx.fxml")
 }
 
 publishing {
@@ -100,9 +106,11 @@ publishing {
                             val snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
                             val releaseUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 
-                            if (version.endsWith("-SNAPSHOT")) {
+                            if (version.endsWith("-SNAPSHOT"))
+                            {
                                 setUrl(snapshotUrl)
-                            } else {
+                            } else
+                            {
                                 setUrl(releaseUrl)
                             }
                         }
